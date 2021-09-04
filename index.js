@@ -75,7 +75,10 @@ function draw() {
       }
     } else if (y + dy > canvas.height - ballRadius) {
       alert("GAME OVER");
-//       document.location.reload();
+      x = canvas.width / 2;
+      y = canvas.height - 60;
+      drawBall()
+      document.location.reload();
       // clearInterval(interval);
     }
   }
@@ -191,5 +194,5 @@ function keyUpHandler(e) {
   }
 }
 
-draw();
+requestAnimationFrame(draw);
 // let interval = setInterval(draw, 10);
