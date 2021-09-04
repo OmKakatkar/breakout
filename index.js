@@ -3,22 +3,6 @@ const canvas = document.querySelector("#myCanvas");
 /** @type {CanvasRenderingContext2D} */
 const ctx = canvas.getContext("2d");
 
-// ctx.beginPath();
-// ctx.arc(240, 60, 20, 0, Math.PI * 2, false);
-// ctx.rect(20, 40, 50, 50);
-// ctx.rect(130, 90, 100, 50);
-// ctx.strokeStyle = "rgba(0,0,255,0.5)"
-// ctx.fillStyle = "#FF0000";
-// ctx.fill();
-// ctx.stroke()
-// ctx.closePath();
-
-// All instructions must be between beginPath and closePath
-// We are drawing a rect.
-// With a red color
-// rectangle is placed 20 px from left
-// 40px from top, 50px wide and 50px height
-
 // Defining a draw function
 let x = canvas.width / 2;
 let y = canvas.height - 60;
@@ -75,9 +59,9 @@ function draw() {
       }
     } else if (y + dy > canvas.height - ballRadius) {
       alert("GAME OVER");
-      x = canvas.width / 2;
-      y = canvas.height - 60;
-      drawBall()
+      // x = canvas.width / 2;
+      // y = canvas.height - 60;
+      // drawBall();
       document.location.reload();
       // clearInterval(interval);
     }
@@ -162,14 +146,14 @@ function collisionDetection() {
         dy = -dy;
         brick.visibilityStatus = 0;
         score++;
-      }
-      if (score === brickColumnCount * brickRowCount) {
-        alert("You Win, Click Ok to play again");
-        x = canvas.width / 2;
-        y = canvas.height - 60;
-        drawBall()
-        document.location.reload();
-        // clearInterval(interval);
+        if (score === brickColumnCount * brickRowCount) {
+          alert("You Win, Click Ok to play again");
+          // x = canvas.width / 2;
+          // y = canvas.height - 60;
+          // drawBall();
+          document.location.reload();
+          // clearInterval(interval);
+        }
       }
     }
   }
