@@ -165,6 +165,9 @@ function collisionDetection() {
       }
       if (score === brickColumnCount * brickRowCount) {
         alert("You Win, Click Ok to play again");
+        x = canvas.width / 2;
+        y = canvas.height - 60;
+        drawBall()
         document.location.reload();
         // clearInterval(interval);
       }
