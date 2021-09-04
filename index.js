@@ -19,6 +19,7 @@ let leftPressed = false;
 let score = 0;
 let coolDown = false;
 const debounceTime = 500;
+let isStart = false;
 
 const brickRowCount = 4;
 const brickColumnCount = 7;
@@ -38,6 +39,7 @@ for (let i = 0; i < brickColumnCount; i++) {
 
 document.addEventListener("keydown", keyDownHandler);
 document.addEventListener("keyup", keyUpHandler);
+document.addEventListener("keypress", keyPressHandler);
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -46,51 +48,56 @@ function draw() {
   drawBall(idx);
   collisionDetection();
   drawScore();
-  if (y + dy < ballRadius) {
-    dy = -dy;
-    idx++;
-    if (idx === colorVar.length) {
-      idx = 0;
-    }
-  } else if (y + dy >= canvas.height - paddleHeight - ballRadius) {
-    if (x > paddleX && x < paddleX + paddleWidth) {
-      if (!coolDown) {
-        dy = -dy;
-        startCoolDown();
+  if (isStart === true) {
+    if (y + dy < ballRadius) {
+      dy = -dy;
+      idx++;
+      if (idx === colorVar.length) {
+        idx = 0;
       }
-    } else if (y + dy > canvas.height - paddleHeight) {
-      if (x + ballRadius >= paddleX && x - ballRadius < paddleX + paddleWidth) {
+    } else if (y + dy >= canvas.height - paddleHeight - ballRadius) {
+      if (x > paddleX && x < paddleX + paddleWidth) {
         if (!coolDown) {
           dy = -dy;
-          dx = -dx;
           startCoolDown();
+        }
+      } else if (y + dy > canvas.height - paddleHeight) {
+        if (
+          x + ballRadius >= paddleX &&
+          x - ballRadius < paddleX + paddleWidth
+        ) {
+          if (!coolDown) {
+            dy = -dy;
+            dx = -dx;
+            startCoolDown();
+          }
         }
       }
     }
-  }
-  if (y + dy > canvas.height - ballRadius) {
-    alert("GAME OVER");
-    document.location.reload();
-  }
-  if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
-    dx = -dx;
-    idx++;
-    if (idx === colorVar.length) {
-      idx = 0;
+    if (y + dy > canvas.height - ballRadius) {
+      alert("GAME OVER");
+      document.location.reload();
     }
-  }
-  x += dx;
-  y += dy;
+    if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
+      dx = -dx;
+      idx++;
+      if (idx === colorVar.length) {
+        idx = 0;
+      }
+    }
+    x += dx;
+    y += dy;
 
-  if (rightPressed) {
-    paddleX += 7;
-    if (paddleX + paddleWidth > canvas.width) {
-      paddleX = canvas.width - paddleWidth;
-    }
-  } else if (leftPressed) {
-    paddleX -= 7;
-    if (paddleX < 0) {
-      paddleX = 0;
+    if (rightPressed) {
+      paddleX += 7;
+      if (paddleX + paddleWidth > canvas.width) {
+        paddleX = canvas.width - paddleWidth;
+      }
+    } else if (leftPressed) {
+      paddleX -= 7;
+      if (paddleX < 0) {
+        paddleX = 0;
+      }
     }
   }
   requestAnimationFrame(draw);
@@ -179,6 +186,14 @@ function keyUpHandler(e) {
     rightPressed = false;
   } else if (e.key == "Left" || e.key == "ArrowLeft") {
     leftPressed = false;
+  }
+}
+
+function keyPressHandler(e) {
+  if (e.key == " " || e.key == "Spacebar") {
+    console.log(isStart);
+    isStart = !isStart;
+    console.log(isStart);
   }
 }
 
