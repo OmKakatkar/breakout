@@ -4,8 +4,6 @@ const canvas = document.querySelector("#myCanvas");
 const ctx = canvas.getContext("2d");
 
 // Defining a draw function
-let x = canvas.width / 2;
-let y = canvas.height - 60;
 let dx = 2;
 let dy = -2;
 const ballRadius = 10;
@@ -20,6 +18,9 @@ let score = 0;
 let coolDown = false;
 const debounceTime = 500;
 let isStart = false;
+let isPaused = false;
+let x = canvas.width / 2;
+let y = canvas.height - paddleHeight - ballRadius;
 
 const brickRowCount = 4;
 const brickColumnCount = 7;
@@ -48,7 +49,7 @@ function draw() {
   drawBall(idx);
   collisionDetection();
   drawScore();
-  if (isStart === true) {
+  if (isStart === true && isPaused === false) {
     if (y + dy < ballRadius) {
       dy = -dy;
       idx++;
@@ -87,18 +88,32 @@ function draw() {
     }
     x += dx;
     y += dy;
+  }
 
+  if (isPaused === false) {
     if (rightPressed) {
+      if (isStart === false) x += 7;
       paddleX += 7;
       if (paddleX + paddleWidth > canvas.width) {
         paddleX = canvas.width - paddleWidth;
+        if (isStart === false) x = canvas.width - paddleWidth / 2;
       }
     } else if (leftPressed) {
+      if (isStart === false) x -= 7;
       paddleX -= 7;
       if (paddleX < 0) {
         paddleX = 0;
+        if (isStart === false) x = paddleWidth / 2;
       }
     }
+  }
+
+  if (isStart === false) {
+    drawGameStart();
+  }
+
+  if (isPaused === true) {
+    drawGamePaused();
   }
   requestAnimationFrame(draw);
 }
@@ -173,6 +188,19 @@ function drawScore() {
   ctx.fillText("Score: " + score, 8, 20);
 }
 
+function drawGameStart() {
+  ctx.font = "32px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText("Press SpaceBar to Start", 80, canvas.height / 2);
+}
+
+function drawGamePaused() {
+  ctx.font = "32px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText("Game Paused", 145, canvas.height / 2);
+  ctx.fillText("Press Spacebar to resume", 60, canvas.height - 200);
+}
+
 function keyDownHandler(e) {
   if (e.key == "Right" || e.key == "ArrowRight") {
     rightPressed = true;
@@ -191,9 +219,11 @@ function keyUpHandler(e) {
 
 function keyPressHandler(e) {
   if (e.key == " " || e.key == "Spacebar") {
-    console.log(isStart);
-    isStart = !isStart;
-    console.log(isStart);
+    if (isStart === false) {
+      isStart = true;
+      isPaused = true;
+    }
+    isPaused = !isPaused;
   }
 }
 
