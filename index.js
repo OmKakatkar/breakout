@@ -76,6 +76,8 @@ function draw() {
       }
     }
     if (y + dy > canvas.height - ballRadius) {
+      x = 100;
+      y = 100;
       alert("GAME OVER");
       document.location.reload();
     }
@@ -175,6 +177,8 @@ function collisionDetection() {
         score++;
         if (score === brickColumnCount * brickRowCount) {
           alert("You Win, Click Ok to play again");
+          x = 100;
+          y = 100;
           document.location.reload();
         }
       }
